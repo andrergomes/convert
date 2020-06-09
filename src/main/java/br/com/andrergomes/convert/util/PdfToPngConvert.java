@@ -6,7 +6,9 @@
 package br.com.andrergomes.convert.util;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
@@ -18,17 +20,24 @@ import org.apache.pdfbox.tools.imageio.ImageIOUtil;
  */
 public class PdfToPngConvert {
 
-    public static void generatePngFromPdf(String filename, Integer page, String extension) throws IOException {
-        try (PDDocument document = PDDocument.load(PdfToPngConvert.class.getClassLoader().getResourceAsStream(filename))) {
+    private static final String TARGET_EXTENSION = ".png";
+
+    public static void generatePngFromPdf(String sourcePath, String targetPath, Integer page) throws IOException {
+
+        String targetName = new File(sourcePath).getName().replaceFirst("[.][^.]+$", "");
+
+        String targetFileName = Paths.get(targetPath, targetName + "_pg" + page + TARGET_EXTENSION).toString();
+
+        try (PDDocument document = PDDocument.load(new File(sourcePath))) {
             PDFRenderer pdfRenderer = new PDFRenderer(document);
 
-            BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 300, ImageType.RGB);
-            ImageIOUtil.writeImage(bim, String.format("pdf-%d.%s", page + 1, extension), 300);
+            BufferedImage bim = pdfRenderer.renderImageWithDPI(--page, 300, ImageType.RGB);
+            ImageIOUtil.writeImage(bim, targetFileName, 300);
         }
     }
 
-    public static int getSizePdfPages(String filename) throws IOException {
-        PDDocument document = PDDocument.load(PdfToPngConvert.class.getClassLoader().getResourceAsStream(filename));
+    public static int getSizePdfPages(String sourcePath) throws IOException {
+        PDDocument document = PDDocument.load(new File(sourcePath));
 
         return document.getNumberOfPages();
     }

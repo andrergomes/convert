@@ -40,15 +40,16 @@ public class ConvertJFrame extends javax.swing.JFrame {
         jFileChooserPdf = new javax.swing.JFileChooser();
         jFileChooserPng = new javax.swing.JFileChooser();
         jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        jLabelPngPath = new javax.swing.JLabel();
+        jTextFieldPngPath = new javax.swing.JTextField();
         jButtonOpenPngFolder = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        jButtonConvert = new javax.swing.JButton();
         jLabelPdfPath = new javax.swing.JLabel();
         jTextFieldPdfPath = new javax.swing.JTextField();
         jButtonOpenPdfFolder = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
+        jLabelPages = new javax.swing.JLabel();
         jSpinnerPages = new javax.swing.JSpinner();
+        jLabelDone = new javax.swing.JLabel();
 
         jFileChooserPdf.setCurrentDirectory(new java.io.File("C:\\Users"));
         jFileChooserPdf.setDialogTitle("");
@@ -60,11 +61,11 @@ public class ConvertJFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel2.setText("Destino PNG");
-        jLabel2.setToolTipText("");
+        jLabelPngPath.setText("Destino PNG");
+        jLabelPngPath.setToolTipText("");
 
-        jTextField2.setToolTipText("Indique diretório onde será gerado .png");
-        jTextField2.setEnabled(false);
+        jTextFieldPngPath.setToolTipText("Indique diretório onde será gerado .png");
+        jTextFieldPngPath.setEnabled(false);
 
         jButtonOpenPngFolder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/folder-icon.png"))); // NOI18N
         jButtonOpenPngFolder.setToolTipText("Selecione diretório desejado");
@@ -75,12 +76,12 @@ public class ConvertJFrame extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("Converter");
-        jButton3.setToolTipText("");
-        jButton3.setEnabled(false);
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        jButtonConvert.setText("Convert");
+        jButtonConvert.setToolTipText(null);
+        jButtonConvert.setEnabled(false);
+        jButtonConvert.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                jButtonConvertActionPerformed(evt);
             }
         });
 
@@ -97,10 +98,19 @@ public class ConvertJFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setText("Página");
+        jLabelPages.setText("Página");
 
         jSpinnerPages.setModel(new javax.swing.SpinnerNumberModel(1, null, null, 1));
         jSpinnerPages.setEnabled(false);
+        jSpinnerPages.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                choosePage(evt);
+            }
+        });
+
+        jLabelDone.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabelDone.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabelDone.setToolTipText("");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -108,28 +118,32 @@ public class ConvertJFrame extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton3)
+                .addComponent(jButtonConvert)
                 .addGap(142, 142, 142))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(11, 11, 11)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabelPdfPath)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabelPngPath)
+                    .addComponent(jLabelPages))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jSpinnerPages, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
-                            .addComponent(jTextFieldPdfPath))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jTextFieldPngPath, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                            .addComponent(jTextFieldPdfPath, javax.swing.GroupLayout.Alignment.LEADING))
                         .addGap(7, 7, 7)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButtonOpenPngFolder, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButtonOpenPdfFolder, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(6, 6, 6))))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabelDone, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -146,14 +160,16 @@ public class ConvertJFrame extends javax.swing.JFrame {
                             .addComponent(jTextFieldPdfPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jLabelPngPath)
+                            .addComponent(jTextFieldPngPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
+                    .addComponent(jLabelPages)
                     .addComponent(jSpinnerPages, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 107, Short.MAX_VALUE)
-                .addComponent(jButton3)
+                .addGap(28, 28, 28)
+                .addComponent(jLabelDone, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                .addGap(29, 29, 29)
+                .addComponent(jButtonConvert)
                 .addGap(28, 28, 28))
         );
 
@@ -178,9 +194,16 @@ public class ConvertJFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    private void jButtonConvertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConvertActionPerformed
+        try {
+            PdfToPngConvert.generatePngFromPdf(jTextFieldPdfPath.getText(), jTextFieldPngPath.getText(), (Integer) jSpinnerPages.getValue());
+            Logger.getLogger(ConvertJFrame.class.getName()).log(Level.INFO, "File {0} successfully converted!", jTextFieldPdfPath.getText());
+            jButtonConvert.setEnabled(false);
+            jLabelDone.setText("Done!");
+        } catch (IOException ex) {
+            Logger.getLogger(ConvertJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButtonConvertActionPerformed
 
     private void jButtonOpenPdfFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOpenPdfFolderActionPerformed
         int returnVal = jFileChooserPdf.showOpenDialog(this);
@@ -189,8 +212,8 @@ public class ConvertJFrame extends javax.swing.JFrame {
             jTextFieldPdfPath.setText(file.getAbsolutePath());
 
             try {
-                int maxPages = PdfToPngConvert.getSizePdfPages(file.getName());
-                jTextField2.setEnabled(true);
+                int maxPages = PdfToPngConvert.getSizePdfPages(file.getAbsolutePath());
+                jTextFieldPngPath.setEnabled(true);
                 jButtonOpenPngFolder.setEnabled(true);
                 jSpinnerPages.setEnabled(true);
                 jSpinnerPages.setModel(new javax.swing.SpinnerNumberModel(1, 1, maxPages, 1));
@@ -206,16 +229,21 @@ public class ConvertJFrame extends javax.swing.JFrame {
         int returnVal = jFileChooserPng.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = jFileChooserPng.getSelectedFile();
+            jTextFieldPngPath.setText(file.getAbsolutePath());
+            jSpinnerPages.setEnabled(true);
+            jButtonConvert.setEnabled(true);
 
-            try {
-                PdfToPngConvert.generatePngFromPdf(jTextFieldPdfPath.getText(), ((Integer) jSpinnerPages.getValue()), ".png");
-            } catch (IOException ex) {
-                Logger.getLogger(ConvertJFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            //PdfToPngConvert.generatePngFromPdf(jTextFieldPdfPath.getText(), ((Integer) jSpinnerPages.getValue()), ".png");
         } else {
             System.out.println("File access cancelled by user.");
         }
     }//GEN-LAST:event_jButtonOpenPngFolderActionPerformed
+
+    private void choosePage(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_choosePage
+//        if (jSpinnerPages.getValue() != null) {
+//            jButtonConvert.setEnabled(true);
+//        }
+    }//GEN-LAST:event_choosePage
 
     /**
      * @param args the command line arguments
@@ -256,17 +284,18 @@ public class ConvertJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButtonConvert;
     private javax.swing.JButton jButtonOpenPdfFolder;
     private javax.swing.JButton jButtonOpenPngFolder;
     private javax.swing.JFileChooser jFileChooserPdf;
     private javax.swing.JFileChooser jFileChooserPng;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabelDone;
+    private javax.swing.JLabel jLabelPages;
     private javax.swing.JLabel jLabelPdfPath;
+    private javax.swing.JLabel jLabelPngPath;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSpinner jSpinnerPages;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextFieldPdfPath;
+    private javax.swing.JTextField jTextFieldPngPath;
     // End of variables declaration//GEN-END:variables
 }
