@@ -8,11 +8,15 @@ package br.com.andrergomes.convert;
 import br.com.andrergomes.convert.filter.OnlyPdfFiles;
 import br.com.andrergomes.convert.filter.OnlyDirectories;
 import br.com.andrergomes.convert.util.PdfToPngConvert;
+
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 
 /**
@@ -48,8 +52,9 @@ public class ConvertJFrame extends javax.swing.JFrame {
         jTextFieldPdfPath = new javax.swing.JTextField();
         jButtonOpenPdfFolder = new javax.swing.JButton();
         jLabelPages = new javax.swing.JLabel();
-        jSpinnerPages = new javax.swing.JSpinner();
         jLabelDone = new javax.swing.JLabel();
+        jScrollPanePages = new javax.swing.JScrollPane();
+        jListPages = new javax.swing.JList<>();
 
         jFileChooserPdf.setCurrentDirectory(new java.io.File("C:\\Users"));
         jFileChooserPdf.setDialogTitle("");
@@ -98,28 +103,24 @@ public class ConvertJFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabelPages.setText("Página");
-
-        jSpinnerPages.setModel(new javax.swing.SpinnerNumberModel(1, null, null, 1));
-        jSpinnerPages.setEnabled(false);
-        jSpinnerPages.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                choosePage(evt);
-            }
-        });
+        jLabelPages.setText("Página(s)");
 
         jLabelDone.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabelDone.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabelDone.setToolTipText("");
 
+        jListPages.setEnabled(false);
+        jListPages.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                valueChangedList(evt);
+            }
+        });
+        jScrollPanePages.setViewportView(jListPages);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButtonConvert)
-                .addGap(142, 142, 142))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(11, 11, 11)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -129,11 +130,11 @@ public class ConvertJFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jSpinnerPages, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPanePages, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(232, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextFieldPngPath, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                            .addComponent(jTextFieldPngPath, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jTextFieldPdfPath, javax.swing.GroupLayout.Alignment.LEADING))
                         .addGap(7, 7, 7)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -144,6 +145,10 @@ public class ConvertJFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabelDone, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(166, 166, 166)
+                .addComponent(jButtonConvert)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -163,14 +168,18 @@ public class ConvertJFrame extends javax.swing.JFrame {
                             .addComponent(jLabelPngPath)
                             .addComponent(jTextFieldPngPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelPages)
-                    .addComponent(jSpinnerPages, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
-                .addComponent(jLabelDone, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                .addGap(29, 29, 29)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPanePages, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabelPages)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(19, 19, 19)
+                .addComponent(jLabelDone, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
+                .addGap(41, 41, 41)
                 .addComponent(jButtonConvert)
-                .addGap(28, 28, 28))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -185,8 +194,8 @@ public class ConvertJFrame extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(18, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -195,14 +204,35 @@ public class ConvertJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonConvertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConvertActionPerformed
-        try {
-            PdfToPngConvert.generatePngFromPdf(jTextFieldPdfPath.getText(), jTextFieldPngPath.getText(), (Integer) jSpinnerPages.getValue());
-            Logger.getLogger(ConvertJFrame.class.getName()).log(Level.INFO, "File {0} successfully converted!", jTextFieldPdfPath.getText());
-            jButtonConvert.setEnabled(false);
-            jLabelDone.setText("Done!");
-        } catch (IOException ex) {
-            Logger.getLogger(ConvertJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        //try {
+//            PdfToPngConvert.generatePngFromPdf(jTextFieldPdfPath.getText(), jTextFieldPngPath.getText(), (Integer) jSpinnerPages.getValue());
+//            Logger.getLogger(ConvertJFrame.class.getName()).log(Level.INFO, "File {0} successfully converted!", jTextFieldPdfPath.getText());
+//            jButtonConvert.setEnabled(false);
+//            jLabelDone.setText("Done!");
+
+//            int[] selectedIndices = jListPages.getSelectedIndices();
+//            int pagesRange = jSpinnerPages.getModel().get
+//            String[] myArray = new String[50];
+//            for (int i = 0; i < selectedIndices.length; i++) {
+//               myArray[i] =  String.valueOf(jList1.getModel().getElementAt(selectedIndices[i]));
+//            }
+//        } catch (IOException ex) {
+//            Logger.getLogger(ConvertJFrame.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+
+        jButtonConvert.setEnabled(false);
+
+        int[] pages = jListPages.getSelectedIndices();
+        
+        for(int page : pages) {
+            try {
+                PdfToPngConvert.generatePngFromPdf(jTextFieldPdfPath.getText(), jTextFieldPngPath.getText(), ++page);
+            } catch (IOException ex) {
+                Logger.getLogger(ConvertJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+        
+        jLabelDone.setText("Done!");
     }//GEN-LAST:event_jButtonConvertActionPerformed
 
     private void jButtonOpenPdfFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOpenPdfFolderActionPerformed
@@ -215,8 +245,19 @@ public class ConvertJFrame extends javax.swing.JFrame {
                 int maxPages = PdfToPngConvert.getSizePdfPages(file.getAbsolutePath());
                 jTextFieldPngPath.setEnabled(true);
                 jButtonOpenPngFolder.setEnabled(true);
-                jSpinnerPages.setEnabled(true);
-                jSpinnerPages.setModel(new javax.swing.SpinnerNumberModel(1, 1, maxPages, 1));
+//                jSpinnerPages.setEnabled(true);
+//                jSpinnerPages.setModel(new javax.swing.SpinnerNumberModel(1, 1, maxPages, 1));
+            jListPages.setEnabled(true);
+
+            List<String> pages = IntStream.range(1, ++maxPages).boxed().map(i -> i.toString()).collect(Collectors.toList());
+
+            DefaultListModel<String> listModel = new DefaultListModel<>();
+            pages.forEach(page -> {
+                listModel.addElement(page);
+            });
+            
+            jListPages.setModel(listModel);
+            
             } catch (IOException ex) {
                 Logger.getLogger(ConvertJFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -230,8 +271,8 @@ public class ConvertJFrame extends javax.swing.JFrame {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = jFileChooserPng.getSelectedFile();
             jTextFieldPngPath.setText(file.getAbsolutePath());
-            jSpinnerPages.setEnabled(true);
-            jButtonConvert.setEnabled(true);
+//            jSpinnerPages.setEnabled(true);
+//            jButtonConvert.setEnabled(true);
 
             //PdfToPngConvert.generatePngFromPdf(jTextFieldPdfPath.getText(), ((Integer) jSpinnerPages.getValue()), ".png");
         } else {
@@ -239,11 +280,14 @@ public class ConvertJFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonOpenPngFolderActionPerformed
 
-    private void choosePage(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_choosePage
-//        if (jSpinnerPages.getValue() != null) {
-//            jButtonConvert.setEnabled(true);
-//        }
-    }//GEN-LAST:event_choosePage
+    private void valueChangedList(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_valueChangedList
+        if(jListPages.getSelectedIndices().length != 0) {
+            jButtonConvert.setEnabled(true);
+            
+        } else {
+            jButtonConvert.setEnabled(false);
+        }
+    }//GEN-LAST:event_valueChangedList
 
     /**
      * @param args the command line arguments
@@ -293,8 +337,9 @@ public class ConvertJFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelPages;
     private javax.swing.JLabel jLabelPdfPath;
     private javax.swing.JLabel jLabelPngPath;
+    private javax.swing.JList<String> jListPages;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JSpinner jSpinnerPages;
+    private javax.swing.JScrollPane jScrollPanePages;
     private javax.swing.JTextField jTextFieldPdfPath;
     private javax.swing.JTextField jTextFieldPngPath;
     // End of variables declaration//GEN-END:variables
