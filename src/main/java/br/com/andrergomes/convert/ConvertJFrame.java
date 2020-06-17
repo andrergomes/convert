@@ -8,6 +8,7 @@ package br.com.andrergomes.convert;
 import br.com.andrergomes.convert.filter.OnlyPdfFiles;
 import br.com.andrergomes.convert.filter.OnlyDirectories;
 import br.com.andrergomes.convert.util.PdfToPngConvert;
+import darrylbu.util.SwingUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,8 +17,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import javax.swing.Action;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
+import javax.swing.JTable;
 
 /**
  *
@@ -56,11 +59,11 @@ public class ConvertJFrame extends javax.swing.JFrame {
         jScrollPanePages = new javax.swing.JScrollPane();
         jListPages = new javax.swing.JList<>();
 
-        jFileChooserPdf.setCurrentDirectory(new java.io.File("C:\\Users"));
+        jFileChooserPdf.setCurrentDirectory(new File(System.getProperty("user.home") + File.separator + "Downloads"));
         jFileChooserPdf.setDialogTitle("");
         jFileChooserPdf.setFileFilter(new OnlyPdfFiles());
 
-        jFileChooserPng.setCurrentDirectory(new java.io.File("C:\\Users"));
+        jFileChooserPng.setCurrentDirectory(new File(System.getProperty("user.home") + File.separator + "Desktop"));
         jFileChooserPng.setFileFilter(new OnlyDirectories());
         jFileChooserPng.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
 
@@ -169,12 +172,8 @@ public class ConvertJFrame extends javax.swing.JFrame {
                             .addComponent(jTextFieldPngPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPanePages, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabelPages)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jScrollPanePages, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelPages))
                 .addGap(19, 19, 19)
                 .addComponent(jLabelDone, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
                 .addGap(41, 41, 41)
@@ -236,6 +235,15 @@ public class ConvertJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonConvertActionPerformed
 
     private void jButtonOpenPdfFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOpenPdfFolderActionPerformed
+        Action details = jFileChooserPdf.getActionMap().get("viewTypeDetails");
+        details.actionPerformed(null);
+
+        //  Encontra a tabela no painel do filechooser e faz a ordenação manualmente
+
+        JTable table = SwingUtils.getDescendantsOfType(JTable.class, jFileChooserPdf).get(0);
+        table.getRowSorter().toggleSortOrder(3);    
+        table.getRowSorter().toggleSortOrder(3);
+        
         int returnVal = jFileChooserPdf.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = jFileChooserPdf.getSelectedFile();
@@ -271,17 +279,21 @@ public class ConvertJFrame extends javax.swing.JFrame {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = jFileChooserPng.getSelectedFile();
             jTextFieldPngPath.setText(file.getAbsolutePath());
-//            jSpinnerPages.setEnabled(true);
-//            jButtonConvert.setEnabled(true);
 
-            //PdfToPngConvert.generatePngFromPdf(jTextFieldPdfPath.getText(), ((Integer) jSpinnerPages.getValue()), ".png");
+            if(jListPages.getSelectedIndices().length != 0 && (jTextFieldPngPath.getText() != null && !jTextFieldPngPath.getText().equals(""))) {
+                jButtonConvert.setEnabled(true);
+            
+            } else {
+                jButtonConvert.setEnabled(false);
+            }
+            
         } else {
             System.out.println("File access cancelled by user.");
         }
     }//GEN-LAST:event_jButtonOpenPngFolderActionPerformed
 
     private void valueChangedList(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_valueChangedList
-        if(jListPages.getSelectedIndices().length != 0) {
+        if(jListPages.getSelectedIndices().length != 0 && (jTextFieldPngPath.getText() != null && !jTextFieldPngPath.getText().equals(""))) {
             jButtonConvert.setEnabled(true);
             
         } else {
